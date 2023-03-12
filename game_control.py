@@ -27,7 +27,6 @@ class GameInput(ABC):
             raise(BadChoiceInput(f'enter value: {self.choice}'))
 
     def is_good_choice_input(self):
-        print(type(self.choice))
         return self.choice.isdigit() and int(self.choice) in range(1,4)
     
 class UserInput(GameInput):

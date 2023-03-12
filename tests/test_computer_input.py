@@ -1,5 +1,5 @@
 import pytest
-from game_control import ComputerInput, BadParameterForCustomDifficultyLevelInput, BadChoiceInput
+from game_control import ComputerInput
 
 # $env:PYTHONPATH += ";C:\Users\windo\Documents\GitHub\game_rock_paper_scissors"
 
@@ -88,4 +88,7 @@ def test_bad_choice_input(computer_input, mocker):
     mock_foo = mocker.patch('game_control.ComputerInput.choice_input_and_check')
     computer_input.check_choice_input()
     mock_foo.assert_called_once()
+
+def test_player_name(computer_input):
+    assert computer_input.player == 'TestComputer'
 
