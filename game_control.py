@@ -16,6 +16,7 @@ class GameInput(ABC):
     def choice_input_and_check(self, **kwargs):
         self.choice_input(**kwargs)
         self.check_choice_input()
+        return self.choice_input
 
     @abstractclassmethod
     def choice_input(self):
@@ -91,10 +92,10 @@ class ComputerInput(GameInput):
         else:
             return random.randint(1,3)
 
-# user = UserInput('Player', game_id=1)
-# choice = user.choice_input_and_check()
-if __name__ == '__main__':
 
+if __name__ == '__main__':
+    user = UserInput('Player', game_id=1)
+    user.choice_input_and_check()
     computer = ComputerInput('Computer', 1)
     computer.input_difficulty_level_and_convert('custom')
     computer.choice_input_and_check(player_choice=3)
