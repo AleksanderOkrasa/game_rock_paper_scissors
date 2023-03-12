@@ -15,8 +15,11 @@ def handle_errors(func):
         except Exception as e:
             exc_type, exc_value, exc_traceback = sys.exc_info()
             if isinstance(e, BadChoiceInput):
-                self.log.warning(f'{exc_type.__name__}: [ {exc_value} ]; try again')
+                self.log.warning(f'{exc_type.__name__}: {e}; try again')
                 return self.choice_input_and_check()
+            elif isinstance(e, BadInputDifficultyLevel):
+                self.log.warning(f'{exc_type.__name__}: {e}; try again')
+                return self.input_difficulty_level_and_convert()
             else:
                 traceback.format_exception(exc_type, exc_value, exc_traceback)
                 filename = exc_traceback.tb_frame.f_code.co_filename
@@ -29,6 +32,8 @@ def handle_errors(func):
 class BadChoiceInput(Exception):
     pass
 
+class BadInputDifficultyLevel(Exception):
+    pass
 class Log():
     # class controlling the creation of logs
     def __init__(self, game_id):
