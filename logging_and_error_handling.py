@@ -1,6 +1,33 @@
+import inspect
 import logging
 import os
+import sys
+import traceback
 
+
+def handle_errors(func):
+    def wrapper(self, *args, **kwargs):
+        try:
+            return func(self, *args, **kwargs)
+        except KeyboardInterrupt:
+            self.log.error(f'a function was interrupted by a user (ctrl + c)')
+            exit(2)
+        except Exception as e:
+            exc_type, exc_value, exc_traceback = sys.exc_info()
+            if isinstance(e, BadChoiceInput):
+                self.log.warning(f'{exc_type.__name__}: [ {exc_value} ]; try again')
+                return self.choice_input_and_check()
+            else:
+                traceback.format_exception(exc_type, exc_value, exc_traceback)
+                filename = exc_traceback.tb_frame.f_code.co_filename
+                # indicates the exact location in the code where the error occurred 
+                self.log.error(f"Exception in function {func.__name__} in file {filename}, line {exc_traceback.tb_lineno}: {exc_type.__name__}: {exc_value}")
+                exit(1)
+    return wrapper
+
+    
+class BadChoiceInput(Exception):
+    pass
 
 class Log():
     # class controlling the creation of logs

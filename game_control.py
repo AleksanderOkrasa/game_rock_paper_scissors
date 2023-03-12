@@ -2,8 +2,7 @@ from abc import ABC, abstractclassmethod
 
 from msvcrt import getch
 
-from logging_and_error_handling import Log
-
+from logging_and_error_handling import Log, handle_errors, BadChoiceInput
 class GameInput(ABC):
     def __init__(self, player, game_id):
         self.player = player
@@ -13,26 +12,27 @@ class GameInput(ABC):
     def __str__(self):
         return self.player
     
+    def choice_input_and_check(self):
+        self.choice_input()
+        self.check_choice_input()
+
     @abstractclassmethod
     def choice_input(self, choice = None):
         pass
 
-    def check_choice_input(self, choice):
+    @handle_errors
+    def check_choice_input(self):
         if not self.is_good_choice_input():
-            raise(BadChoiceInput(f'enter value: {choice}'))
+            raise(BadChoiceInput(f'enter value: {self.choice}'))
 
     def is_good_choice_input(self):
-        return choice.isdigit() and int(choice) in range(1,4)
+        return self.choice.isdigit() and int(self.choice) in range(1,4)
     
 class UserInput(GameInput):
     def choice_input(self, choice = None):
-        print('Type a choice [1 - rock, 2 - paper, 3 - scissors]')
-        choice = getch().decode('utf-8')
-        self.log.info(f'{self.player} enter {choice}')
-        return choice
-    
-class BadChoiceInput(Exception):
-    pass
+        print('Type a choice [1 -> rock] [2 -> paper] [3 -> scissors]')
+        self.choice = getch().decode('utf-8')
+        self.log.info(f'{self.player} enter {self.choice}')
+
 user = UserInput('Player', game_id=1)
-choice = user.choice_input()
-print(user.check_choice_input(choice))
+choice = user.choice_input_and_check()
