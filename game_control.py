@@ -13,8 +13,8 @@ class GameInput(ABC):
     def __str__(self):
         return self.player
     
-    def choice_input_and_check(self):
-        self.choice_input()
+    def choice_input_and_check(self, **kwargs):
+        self.choice_input(**kwargs)
         self.check_choice_input()
 
     @abstractclassmethod
@@ -30,7 +30,7 @@ class GameInput(ABC):
         return self.choice.isdigit() and int(self.choice) in range(1,4)
     
 class UserInput(GameInput):
-    def choice_input(self):
+    def choice_input(self, **kwargs):
         print('Type a choice [1 -> rock] [2 -> paper] [3 -> scissors]')
         self.choice = getch().decode('utf-8')
         self.log.info(f'{self.player} enter {self.choice}')
@@ -49,17 +49,17 @@ class ComputerInput(GameInput):
     def convert_difficulty_level_to_and_reaction_time_and_probability_of_counterattack(self):
         if self.difficulty_level == 'hard':
             self.probability_of_counterattack = 0.90
-            self.reaction_time = 0.3
+            self.reaction_time = 0.5
         elif self.difficulty_level == 'medium':
             self.probability_of_counterattack = 0.60
-            self.reaction_time = 0.61
+            self.reaction_time = 1.0
         elif self.difficulty_level == 'easy':
             self.probability_of_counterattack = 0.30
-            self.reaction_time = 1.0
+            self.reaction_time = 2
         elif self.difficulty_level == 'custom':
             self.input_parameters_for_custom_difficulty_level()
         else:
-            raise BadDifficultyLevelInput({self.difficulty_level})
+            raise BadDifficultyLevelInput(self.difficulty_level)
         self.log.info(f'difficulty level = {self.difficulty_level}\n\t\t\t    probability of counterattack = {self.probability_of_counterattack}\n\t\t\t    reaction time = {self.reaction_time}')
 
     def input_parameters_for_custom_difficulty_level(self):
@@ -79,23 +79,23 @@ class ComputerInput(GameInput):
             raise BadParameterForCustomDifficultyLevelInput(parameter)
         
     
-    def choice_input(self):
-        self.choice = self.generate_random_number()
+    def choice_input(self, **kwargs):
+        self.choice = str(self.generate_random_number(**kwargs))
 
     def generate_random_number(self, player_choice = None):
         if player_choice:
             if random.random() < self.probability_of_counterattack:
                 return player_choice
             else:
-                return random.randint(1, 3)
+                return  random.randint(1, 3)
         else:
             return random.randint(1,3)
 
 # user = UserInput('Player', game_id=1)
 # choice = user.choice_input_and_check()
+if __name__ == '__main__':
 
-computer = ComputerInput('Computer', game_id=1)
-computer.input_difficulty_level_and_convert('custom')
-print(computer.generate_random_number(player_choice=3))
-# print(computer.generate_random_number())
-
+    computer = ComputerInput('Computer', 1)
+    computer.input_difficulty_level_and_convert('custom')
+    computer.choice_input_and_check(player_choice=3)
+    # print(computer.generate_random_number())
