@@ -13,8 +13,8 @@ class GameInput(ABC):
     def __str__(self):
         return self.player
     
-    def choice_input_and_check(self):
-        self.choice_input()
+    def choice_input_and_check(self, **kwargs):
+        self.choice_input(**kwargs)
         self.check_choice_input()
 
     @abstractclassmethod
@@ -27,6 +27,7 @@ class GameInput(ABC):
             raise(BadChoiceInput(f'enter value: {self.choice}'))
 
     def is_good_choice_input(self):
+        print(type(self.choice))
         return self.choice.isdigit() and int(self.choice) in range(1,4)
     
 class UserInput(GameInput):
@@ -79,15 +80,15 @@ class ComputerInput(GameInput):
             raise BadParameterForCustomDifficultyLevelInput(parameter)
         
     
-    def choice_input(self):
-        self.choice = self.generate_random_number()
+    def choice_input(self, **kwargs):
+        self.choice = str(self.generate_random_number(**kwargs))
 
     def generate_random_number(self, player_choice = None):
         if player_choice:
             if random.random() < self.probability_of_counterattack:
                 return player_choice
             else:
-                return random.randint(1, 3)
+                return  random.randint(1, 3)
         else:
             return random.randint(1,3)
 
@@ -97,6 +98,5 @@ if __name__ == '__main__':
 
     computer = ComputerInput('Computer', 1)
     computer.input_difficulty_level_and_convert('custom')
-    print(computer.generate_random_number(player_choice=3))
+    computer.choice_input_and_check(player_choice=3)
     # print(computer.generate_random_number())
-

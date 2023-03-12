@@ -1,5 +1,5 @@
 import pytest
-from game_control import ComputerInput, BadParameterForCustomDifficultyLevelInput
+from game_control import ComputerInput, BadParameterForCustomDifficultyLevelInput, BadChoiceInput
 
 # $env:PYTHONPATH += ";C:\Users\windo\Documents\GitHub\game_rock_paper_scissors"
 
@@ -46,22 +46,46 @@ def test_input_difficulty_level_and_convert_with_custom_values_bad_scenario(comp
     monkeypatch.setattr('builtins.input', lambda _: probability_outsite_the_range.pop(0))
     mock_foo = mocker.patch('game_control.ComputerInput.convert_difficulty_level_to_and_reaction_time_and_probability_of_counterattack')
     computer_input.input_parameters_for_custom_difficulty_level()
-    mock_foo.assert_called_once_with()    
+    mock_foo.assert_called_once()    
 
     monkeypatch.setattr('builtins.input', lambda _: reaction_outsite_the_range.pop(0))
     mock_foo = mocker.patch('game_control.ComputerInput.convert_difficulty_level_to_and_reaction_time_and_probability_of_counterattack')
     computer_input.input_parameters_for_custom_difficulty_level()
-    mock_foo.assert_called_once_with()    
+    mock_foo.assert_called_once()    
 
     monkeypatch.setattr('builtins.input', lambda _: probability_bad_type.pop(0))
     mock_foo = mocker.patch('game_control.ComputerInput.convert_difficulty_level_to_and_reaction_time_and_probability_of_counterattack')
     computer_input.input_parameters_for_custom_difficulty_level()
-    mock_foo.assert_called_once_with()    
+    mock_foo.assert_called_once()    
 
     monkeypatch.setattr('builtins.input', lambda _: reaction_bad_type.pop(0))
     mock_foo = mocker.patch('game_control.ComputerInput.convert_difficulty_level_to_and_reaction_time_and_probability_of_counterattack')
     computer_input.input_parameters_for_custom_difficulty_level()
-    mock_foo.assert_called_once_with()    
+    mock_foo.assert_called_once()    
 
+def test_generate_random_number_without_parametr(computer_input):
+    computer_input.choice_input_and_check()
+    assert int(computer_input.choice) in range(1,4)
+    
+def test_generate_random_number_with_player_choice(computer_input):
+    computer_input.probability_of_counterattack = 1
+    for number in range(1,4):
+        computer_input.choice_input(player_choice = number)
+        assert int(computer_input.choice) == number
 
+def test_bad_choice_input(computer_input, mocker):
+    computer_input.choice = '4'
+    mock_foo = mocker.patch('game_control.ComputerInput.choice_input_and_check')
+    computer_input.check_choice_input()
+    mock_foo.assert_called_once()
+    
+    computer_input.choice = 'D'
+    mock_foo = mocker.patch('game_control.ComputerInput.choice_input_and_check')
+    computer_input.check_choice_input()
+    mock_foo.assert_called_once()
+
+    computer_input.choice = '-1'
+    mock_foo = mocker.patch('game_control.ComputerInput.choice_input_and_check')
+    computer_input.check_choice_input()
+    mock_foo.assert_called_once()
 
