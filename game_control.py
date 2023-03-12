@@ -30,7 +30,7 @@ class GameInput(ABC):
         return self.choice.isdigit() and int(self.choice) in range(1,4)
     
 class UserInput(GameInput):
-    def choice_input(self):
+    def choice_input(self, **kwargs):
         print('Type a choice [1 -> rock] [2 -> paper] [3 -> scissors]')
         self.choice = getch().decode('utf-8')
         self.log.info(f'{self.player} enter {self.choice}')
