@@ -12,18 +12,17 @@ class GameEngine():
         round_time = threading.Thread(target=self.round_time)
         player_choice = threading.Thread(target=self.user_input.choice_input_and_check)
         self.start_time = time.time()
+        self.user_input.choice = None
         round_time.start()
         player_choice.start()
-        round_time.join()
-        player_choice.join()
-        print(round_time)
-        self.timestamp = round_time
         while True:
-            if player_choice is not None:
-                time_of_player_choice = time.time()
-                break
-        print(player_choice)
-        self.timestamp_player = int((self.start_time - time_of_player_choice) * 1000)
+            if self.user_input.choice is not None:
+                if self.user_input.choice.isdigit() and int(self.user_input.choice) in range(1,4):
+                    time_of_player_choice = time.time()
+                    break
+  
+        self.timestamp_player = int((time_of_player_choice - self.start_time) * 1000)
+        round_time.join()
 
     
     def round_time(self):
@@ -32,11 +31,9 @@ class GameEngine():
             elapsed_time = current_time - self.start_time
             if elapsed_time >= self.time_of_round:
                 break
-            timestamp = int((current_time - self.start_time) * 1000)
-        return timestamp
 
 if __name__ == '__main__':
     game = GameEngine(3)
     game.round()
-    print(game.timestamp)
     print(game.timestamp_player)
+    print(game.user_input.choice)

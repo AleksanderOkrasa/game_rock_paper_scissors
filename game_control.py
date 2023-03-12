@@ -16,7 +16,6 @@ class GameInput(ABC):
     def choice_input_and_check(self, **kwargs):
         self.choice_input(**kwargs)
         self.check_choice_input()
-        return self.choice_input
 
     @abstractclassmethod
     def choice_input(self):
