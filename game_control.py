@@ -3,7 +3,7 @@ from msvcrt import getch
 
 import random
 
-from logging_and_error_handling import Log, handle_errors, BadChoiceInput, BadInputDifficultyLevel
+from logging_and_error_handling import Log, handle_errors, BadChoiceInput, BadDifficultyLevelInput, BadParameterForCustomDifficultyLevelInput
 class GameInput(ABC):
     def __init__(self, player, game_id):
         self.player = player
@@ -52,18 +52,33 @@ class ComputerInput(GameInput):
             self.reaction_time = 0.3
         elif self.difficulty_level == 'medium':
             self.probability_of_counterattack = 0.60
-            self.reaction_time = 0.6
+            self.reaction_time = 0.61
         elif self.difficulty_level == 'easy':
             self.probability_of_counterattack = 0.30
             self.reaction_time = 1.0
         elif self.difficulty_level == 'custom':
-            self.probability_of_counterattack = input('Enter a probability of counterattack [0.33 - 1.00]: ')
-            self.reaction_time = input('Enter a reaction of time [in seconds, example: 0.5]')
+            self.input_parameters_for_custom_difficulty_level()
         else:
-            raise BadInputDifficultyLevel({self.difficulty_level})
+            raise BadDifficultyLevelInput({self.difficulty_level})
         self.log.info(f'difficulty level = {self.difficulty_level}\n\t\t\t    probability of counterattack = {self.probability_of_counterattack}\n\t\t\t    reaction time = {self.reaction_time}')
-    
 
+    def input_parameters_for_custom_difficulty_level(self):
+            input_probability = input('Enter a probability of counterattack [1 - 100]: ')
+            probability_of_counterattack = self.check_custom_difficulty_level_parameters(input_probability)
+            self.probability_of_counterattack = float(probability_of_counterattack * 0.01)
+
+            input_reaction_time = input('Enter a reaction of time [in miliseconds, example: 5 -> 0.5 sec, max 100]')
+            reaction_time = self.check_custom_difficulty_level_parameters(input_reaction_time)
+            self.reaction_time = float(reaction_time * 0.1)
+
+    @handle_errors
+    def check_custom_difficulty_level_parameters(self, parameter):
+        if parameter.isdigit() and int(parameter) in range(1, 100):
+            return int(parameter)
+        else:
+            raise BadParameterForCustomDifficultyLevelInput(parameter)
+        
+    
     def choice_input(self):
         self.choice = self.generate_random_number()
 
@@ -80,7 +95,7 @@ class ComputerInput(GameInput):
 # choice = user.choice_input_and_check()
 
 computer = ComputerInput('Computer', game_id=1)
-computer.input_difficulty_level_and_convert('medium')
+computer.input_difficulty_level_and_convert('custom')
 print(computer.generate_random_number(player_choice=3))
-print(computer.generate_random_number())
+# print(computer.generate_random_number())
 

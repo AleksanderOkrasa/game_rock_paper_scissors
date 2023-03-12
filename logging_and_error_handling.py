@@ -17,23 +17,30 @@ def handle_errors(func):
             if isinstance(e, BadChoiceInput):
                 self.log.warning(f'{exc_type.__name__}: {e}; try again')
                 return self.choice_input_and_check()
-            elif isinstance(e, BadInputDifficultyLevel):
+            elif isinstance(e, BadDifficultyLevelInput):
                 self.log.warning(f'{exc_type.__name__}: {e}; try again')
                 return self.input_difficulty_level_and_convert()
+            elif isinstance(e, BadParameterForCustomDifficultyLevelInput):
+                self.log.warning(f'{exc_type.__name__}: {e}; try again')
+                return self.convert_difficulty_level_to_and_reaction_time_and_probability_of_counterattack()
+
+            
             else:
                 traceback.format_exception(exc_type, exc_value, exc_traceback)
-                filename = exc_traceback.tb_frame.f_code.co_filename
+                # filename = exc_traceback.tb_frame.f_code.co_filename
                 # indicates the exact location in the code where the error occurred 
-                self.log.error(f"Exception in function {func.__name__} in file {filename}, line {exc_traceback.tb_lineno}: {exc_type.__name__}: {exc_value}")
+                self.log.error(f"Exception in function {func.__name__}, {exc_type.__name__}: {exc_value}")
                 exit(1)
     return wrapper
 
     
 class BadChoiceInput(Exception):
     pass
-
-class BadInputDifficultyLevel(Exception):
+class BadDifficultyLevelInput(Exception):
     pass
+class BadParameterForCustomDifficultyLevelInput(Exception):
+    pass
+
 class Log():
     # class controlling the creation of logs
     def __init__(self, game_id):
