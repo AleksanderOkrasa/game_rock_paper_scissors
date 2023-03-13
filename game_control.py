@@ -58,7 +58,6 @@ class ComputerInput(GameInput):
             self.input_parameters_for_custom_difficulty_level()
         else:
             raise BadDifficultyLevelInput(self.difficulty_level)
-        self.log.info(f'difficulty level = {self.difficulty_level}\n\t\t\t    probability of counterattack = {self.probability_of_counterattack}\n\t\t\t    reaction time = {self.reaction_time}')
 
     def input_parameters_for_custom_difficulty_level(self):
             input_probability = input('Enter a probability of counterattack [1 - 100]: ')
