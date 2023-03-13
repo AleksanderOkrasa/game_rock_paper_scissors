@@ -81,6 +81,7 @@ class ComputerInput(GameInput):
     
     def choice_input(self, **kwargs):
         self.choice = str(self.generate_random_number(**kwargs))
+        self.log.info(f'Computer choice {self.choice}')
 
     def generate_random_number(self, player_choice = None):
         if player_choice:
@@ -91,10 +92,10 @@ class ComputerInput(GameInput):
         else:
             return random.randint(1,3)
 
-# user = UserInput('Player', game_id=1)
-# choice = user.choice_input_and_check()
-if __name__ == '__main__':
 
+if __name__ == '__main__':
+    user = UserInput('Player', game_id=1)
+    user.choice_input_and_check()
     computer = ComputerInput('Computer', 1)
     computer.input_difficulty_level_and_convert('custom')
     computer.choice_input_and_check(player_choice=3)
