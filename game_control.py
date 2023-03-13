@@ -31,12 +31,10 @@ class GameInput(ABC):
     
 class UserInput(GameInput):
     def choice_input(self, **kwargs):
-        print('Type a choice [1 -> rock] [2 -> paper] [3 -> scissors]')
+        print('\nType a choice [1 -> rock] [2 -> paper] [3 -> scissors]: ')
         self.choice = getch().decode('utf-8')
-        self.log.info(f'{self.player} enter {self.choice}')
 
 class ComputerInput(GameInput):
-
     @handle_errors
     def input_difficulty_level_and_convert(self, difficulty_level = None):
         if difficulty_level is None:
@@ -60,7 +58,6 @@ class ComputerInput(GameInput):
             self.input_parameters_for_custom_difficulty_level()
         else:
             raise BadDifficultyLevelInput(self.difficulty_level)
-        self.log.info(f'difficulty level = {self.difficulty_level}\n\t\t\t    probability of counterattack = {self.probability_of_counterattack}\n\t\t\t    reaction time = {self.reaction_time}')
 
     def input_parameters_for_custom_difficulty_level(self):
             input_probability = input('Enter a probability of counterattack [1 - 100]: ')
@@ -81,7 +78,6 @@ class ComputerInput(GameInput):
     
     def choice_input(self, **kwargs):
         self.choice = str(self.generate_random_number(**kwargs))
-        self.log.info(f'Computer choice {self.choice}')
 
     def generate_random_number(self, player_choice = None):
         if player_choice:
