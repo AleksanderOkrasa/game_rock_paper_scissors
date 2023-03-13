@@ -26,7 +26,6 @@ class GameEngine():
     def play(self):
         while True:
             self.round()
-            print('\n')
             self.log.info(f'you have handed over the choice in time: {self.timestamp_computer}')
             self.log.info(f'your choice = {self.OPTIONS[self.User.choice]}, computer choice = {self.OPTIONS[self.Computer.choice]}')
             if self.user_points == self.POINTS_TO_WIN:
@@ -40,6 +39,7 @@ class GameEngine():
         self.round_handling()
         self.pick_a_winner_for_round()
         if self.winner is not None:
+            print('\n')
             self.log.info(f'a winner of round is {self.winner}')
             self.add_points()
 
@@ -69,6 +69,7 @@ class GameEngine():
             if self.User.choice is not None:
                 if self.User.is_good_choice_input:
                     time_of_player_choice = time.time()
+                    print(f'\n\rYour choice: {self.OPTIONS[self.User.choice]}\n')
                     break
         self.timestamp_player = (time_of_player_choice - self.start_time)
 
