@@ -81,6 +81,7 @@ class ComputerInput(GameInput):
     
     def choice_input(self, **kwargs):
         self.choice = str(self.generate_random_number(**kwargs))
+        self.log.info(f'Computer choice {self.choice}')
 
     def generate_random_number(self, player_choice = None):
         if player_choice:
