@@ -2,18 +2,25 @@ import threading
 import time
 
 from game_control import UserInput, ComputerInput
+from logging_and_error_handling import handle_errors, Log
+
 
 class GameEngine():
     def __init__(self, time_of_round):
         self.time_of_round = time_of_round
+        self.options = {'1':'rock', '2':'paper', '3':'scissors'}
         self.user = UserInput('Player', 9)
         self.computer = ComputerInput('Computer', 9)
 
+    @handle_errors
     def set_difficulty_level(self, *args):
         self.computer.input_difficulty_level_and_convert(*args)
 
-    def round(self):
+    def rules(self):
+        pass
 
+    @handle_errors
+    def round(self):
         self.start_time = time.time()
         self.user.choice = None
 
@@ -22,8 +29,9 @@ class GameEngine():
         wait_for_player_choice = threading.Thread(target=self.wait_for_player_choice)
         computer_ai = threading.Thread(target=self.computer_artificial_intelligence)
 
-        round_time.start()
+        
         player_choice.start()
+        round_time.start()
         computer_ai.start()
         wait_for_player_choice.start()
 
@@ -46,6 +54,7 @@ class GameEngine():
                         self.computer.choice_input_and_check(player_choice = self.user.choice)
                 else:
                     self.computer.choice_input_and_check()
+                print(f'\nComputer choice: {self.options[self.computer.choice]}')
                 self.timestamp_computer = (time.time() - self.start_time)
                 break
 
@@ -53,14 +62,18 @@ class GameEngine():
         while True:
             current_time = time.time()
             self.elapsed_time = current_time - self.start_time
+            print(f'\relapsed time: {self.elapsed_time}\t\t', end='', flush=True)
             if self.elapsed_time >= self.time_of_round:
                 break
             
 
+
 if __name__ == '__main__':
     game = GameEngine(4)
-    game.set_difficulty_level('hard')
+    game.rules()
+    game.set_difficulty_level('easy')
     game.round()
+    print('\n')
     print(game.timestamp_player)
     print(game.timestamp_computer)
     # print(game.timestamp_player)
