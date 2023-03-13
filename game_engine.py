@@ -17,7 +17,9 @@ class GameEngine():
         self.computer.input_difficulty_level_and_convert(*args)
 
     def pick_a_winner(self):
-        if self.user.choice == self.computer.choice:
+        if self.user_choice_was_after_time():
+            self.winner = 'computer'
+        elif self.user.choice == self.computer.choice:
             self.winner = None
         elif self.user.choice == '1' and self.computer.choice == '3' or \
             self.user.choice == '2' and self.computer.choice == '1' or \
@@ -26,7 +28,8 @@ class GameEngine():
         else:
             self.winner = 'computer'
 
-
+    def user_choice_was_after_time(self):
+        return self.timestamp_player > self.time_of_round
 
     @handle_errors
     def round(self):
@@ -63,7 +66,7 @@ class GameEngine():
                         self.computer.choice_input_and_check(player_choice = self.user.choice)
                 else:
                     self.computer.choice_input_and_check()
-                print(f'\n\nComputer choice: {self.options[self.computer.choice]}')
+                print(f'\n\rComputer choice: {self.options[self.computer.choice]}\n')
                 self.timestamp_computer = (time.time() - self.start_time)
                 break
 

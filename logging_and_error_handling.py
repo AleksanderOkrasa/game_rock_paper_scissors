@@ -15,7 +15,7 @@ def handle_errors(func):
         except Exception as e:
             exc_type, exc_value, exc_traceback = sys.exc_info()
             if isinstance(e, BadChoiceInput):
-                self.log.warning(f'{exc_type.__name__}: {e}; try again')
+                print(f'\n\r{exc_type.__name__}: {e}; try again\n')
                 return self.choice_input_and_check()
             elif isinstance(e, BadDifficultyLevelInput):
                 self.log.warning(f'{exc_type.__name__}: {e}; try again')
