@@ -8,6 +8,7 @@ from game_engine import GameEngine, YouAreWinner, YouAreLoser
 def engine():
     return GameEngine(11, 3, 5)
 
+
 def test_pick_winner_for_round(engine):
     engine.User.choice = '1'
     engine.Computer.choice = '3'
@@ -37,22 +38,25 @@ def test_pick_winner_for_round(engine):
 
 
 def test_add_points(engine):
-    engine.user_points = 0
-    engine.computer_points = 0
     engine.winner = 'user'
     engine.add_points()
-    assert engine.user_points == 1 and engine.computer_points == 0
+    assert engine.user_points == 1
+    assert engine.computer_points == 0
     engine.add_points()
-    assert engine.user_points == 2 and engine.computer_points == 0
+    assert engine.user_points == 2
+    assert engine.computer_points == 0
     engine.winner = 'computer'
     engine.add_points()
-    assert engine.user_points == 2 and engine.computer_points == 1
+    assert engine.user_points == 2
+    assert engine.computer_points == 1
     engine.add_points()
     engine.add_points()
-    assert engine.user_points == 2 and engine.computer_points == 3
+    assert engine.user_points == 2
+    assert engine.computer_points == 3
     engine.winner = None
     engine.add_points()
-    assert engine.user_points == 2 and engine.computer_points == 3
+    assert engine.user_points == 2
+    assert engine.computer_points == 3
 
 
 def test_pick_winner_for_game(engine):
@@ -68,6 +72,6 @@ def test_pick_winner_for_game(engine):
     with pytest.raises(YouAreLoser):
         engine.check_for_the_end_of_the_game()
 
-
-
-    
+def check_start_points(engine):
+    assert engine.user_points == 0
+    assert engine.computer_points == 0
