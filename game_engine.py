@@ -28,12 +28,14 @@ class GameEngine():
             self.round()
             self.log.info(f'you have handed over the choice in time: {self.timestamp_computer}')
             self.log.info(f'your choice = {self.OPTIONS[self.User.choice]}, computer choice = {self.OPTIONS[self.Computer.choice]}')
-            if self.user_points == self.POINTS_TO_WIN:
-                raise YouAreWinner(self.Computer.difficulty_level, self.user_points, self.computer_points)
-            elif self.computer_points == self.POINTS_TO_WIN:
-                raise YouAreLoser(self.Computer.difficulty_level, self.user_points, self.computer_points)
+            self.check_for_the_end_of_the_game()
             self.log.info(f'your points: {self.user_points}, computer points: {self.computer_points}')
 
+    def check_for_the_end_of_the_game(self):
+        if self.user_points == self.POINTS_TO_WIN:
+            raise YouAreWinner(self.Computer.difficulty_level, self.user_points, self.computer_points)
+        elif self.computer_points == self.POINTS_TO_WIN:
+            raise YouAreLoser(self.Computer.difficulty_level, self.user_points, self.computer_points)
 
     def round(self):
         self.round_handling()
