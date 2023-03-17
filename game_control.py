@@ -30,9 +30,12 @@ class GameInput(ABC):
         return self.choice.isdigit() and int(self.choice) in range(1,4)
     
 class UserInput(GameInput):
-    def choice_input(self, **kwargs):
-        print('\nType a choice [1 -> rock] [2 -> paper] [3 -> scissors]: ')
-        self.choice = getch().decode('utf-8')
+    def choice_input(self, choice = None, **kwargs):
+        if choice is None:
+            print('\nType a choice [1 -> rock] [2 -> paper] [3 -> scissors]: ')
+            self.choice = getch().decode('utf-8')
+        else:
+            self.choice = choice
 
 class ComputerInput(GameInput):
     @handle_errors
@@ -92,7 +95,7 @@ class ComputerInput(GameInput):
 if __name__ == '__main__':
     user = UserInput('Player', game_id=1)
     user.choice_input_and_check()
-    computer = ComputerInput('Computer', 1)
-    computer.input_difficulty_level_and_convert('custom')
-    computer.choice_input_and_check(player_choice=3)
-    # print(computer.generate_random_number())
+    # computer = ComputerInput('Computer', 1)
+    # computer.input_difficulty_level_and_convert('custom')
+    # computer.choice_input_and_check(player_choice=3)
+    # # print(computer.generate_random_number())
