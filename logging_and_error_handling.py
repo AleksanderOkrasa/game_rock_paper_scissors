@@ -15,7 +15,7 @@ def handle_errors(func):
         except Exception as e:
             exc_type, exc_value, exc_traceback = sys.exc_info()
             if isinstance(e, BadChoiceInput):
-                self.log.warning(f'{exc_type.__name__}: {e}; try again')
+                print(f'\n\r{exc_type.__name__}: {e}; try again\n')
                 return self.choice_input_and_check()
             elif isinstance(e, BadDifficultyLevelInput):
                 self.log.warning(f'{exc_type.__name__}: {e}; try again')
@@ -23,7 +23,10 @@ def handle_errors(func):
             elif isinstance(e, BadParameterForCustomDifficultyLevelInput):
                 self.log.warning(f'{exc_type.__name__}: {e}; try again')
                 return self.convert_difficulty_level_to_and_reaction_time_and_probability_of_counterattack()
-
+            elif isinstance(e, YouAreWinner):
+                self.log.info(f'Congratulations! You have won with your computer {e.your_points}:{e.points_computer} at level {e.level}!')
+            elif isinstance(e, YouAreLoser):
+                self.log.info(f'Ohhh! You have lost with your computer {e.your_points}:{e.points_computer} at level {e.level}. :(')
             
             else:
                 traceback.format_exception(exc_type, exc_value, exc_traceback)
@@ -40,6 +43,16 @@ class BadDifficultyLevelInput(Exception):
     pass
 class BadParameterForCustomDifficultyLevelInput(Exception):
     pass
+class YouAreWinner(Exception):
+    def __init__(self, level, your_points, points_computer):
+        self.level = level
+        self.your_points = your_points
+        self.points_computer = points_computer
+class YouAreLoser(Exception):
+    def __init__(self, level, your_points, points_computer):
+        self.level = level
+        self.your_points = your_points
+        self.points_computer = points_computer
 
 class Log():
     # class controlling the creation of logs
