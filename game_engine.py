@@ -28,14 +28,14 @@ class GameEngine():
             self.round()
             self.log.info(f'you have handed over the choice in time: {self.timestamp_computer}')
             self.log.info(f'your choice = {self.OPTIONS[self.User.choice]}, computer choice = {self.OPTIONS[self.Computer.choice]}')
-            self.check_for_the_end_of_the_game()
+            if self.user_points == self.POINTS_TO_WIN:
+                break
+                raise YouAreWinner(self.Computer.difficulty_level, self.user_points, self.computer_points)
+            elif self.computer_points == self.POINTS_TO_WIN:
+                break
+                raise YouAreLoser(self.Computer.difficulty_level, self.user_points, self.computer_points)
             self.log.info(f'your points: {self.user_points}, computer points: {self.computer_points}')
 
-    def check_for_the_end_of_the_game(self):
-        if self.user_points == self.POINTS_TO_WIN:
-            raise YouAreWinner(self.Computer.difficulty_level, self.user_points, self.computer_points)
-        elif self.computer_points == self.POINTS_TO_WIN:
-            raise YouAreLoser(self.Computer.difficulty_level, self.user_points, self.computer_points)
 
     def round(self):
         self.round_handling()
@@ -59,6 +59,7 @@ class GameEngine():
         player_choice.start()
         time.sleep(0.04)
         round_time.start()
+        time.sleep(0.3)
         computer_ai.start()
         wait_for_player_choice.start()
 
@@ -91,9 +92,12 @@ class GameEngine():
         while True:
             current_time = time.time()
             self.elapsed_time = current_time - self.start_time
-            print(f'\relapsed time: {self.elapsed_time}\t\t', end='', flush=True)
+            self.show_elapsed_time()
             if self.elapsed_time >= self.TIME_OF_ROUND:
                 break
+
+    def show_elapsed_time(self):
+        print(f'\relapsed time: {self.elapsed_time}\t\t', end='', flush=True)
 
 
     def pick_a_winner_for_round(self):
