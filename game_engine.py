@@ -29,13 +29,14 @@ class GameEngine():
             self.log.info(f'you have handed over the choice in time: {self.timestamp_computer}')
             self.log.info(f'your choice = {self.OPTIONS[self.User.choice]}, computer choice = {self.OPTIONS[self.Computer.choice]}')
             if self.user_points == self.POINTS_TO_WIN:
-                break
                 raise YouAreWinner(self.Computer.difficulty_level, self.user_points, self.computer_points)
             elif self.computer_points == self.POINTS_TO_WIN:
-                break
                 raise YouAreLoser(self.Computer.difficulty_level, self.user_points, self.computer_points)
             self.log.info(f'your points: {self.user_points}, computer points: {self.computer_points}')
+            self.show_points_of_game()
 
+    def show_points_of_game(self):
+        pass
 
     def round(self):
         self.round_handling()
@@ -108,9 +109,12 @@ class GameEngine():
 
 
     def pick_a_winner_for_round(self):
+        if self.timestamp_player is None:
+            self.timestamp_player = self.TIME_OF_ROUND + 0.01
         if self.user_choice_was_after_time():
             print('\n')
             self.log.warning(f'you handed over the choice after time ({self.timestamp_player}')
+            self.show_over_time()
             self.winner = 'computer'
         elif self.User.choice == self.Computer.choice:
             self.winner = None
@@ -120,16 +124,20 @@ class GameEngine():
                 self.winner = 'user'
         else:
             self.winner = 'computer'
-        
 
     def user_choice_was_after_time(self):
         return self.timestamp_player > self.TIME_OF_ROUND
+
+    def show_overtime(self):
+        pass
 
     def add_points(self):
         if self.winner == 'user':
             self.user_points += 1
         elif self.winner == 'computer':
             self.computer_points += 1
+
+
 
 if __name__ == '__main__':
     game = GameEngine(10, 2)
