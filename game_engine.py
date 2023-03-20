@@ -72,9 +72,12 @@ class GameEngine():
             if self.User.choice is not None:
                 if self.User.is_good_choice_input:
                     time_of_player_choice = time.time()
-                    print(f'\n\rYour choice: {self.OPTIONS[self.User.choice]}\n')
+                    self.show_player_choice()
                     break
         self.timestamp_player = (time_of_player_choice - self.start_time)
+
+    def show_player_choice(self):
+        print(f'\n\rYour choice: {self.OPTIONS[self.User.choice]}\n')
 
     def computer_artificial_intelligence(self):
         while True:
@@ -84,9 +87,13 @@ class GameEngine():
                         self.Computer.choice_input_and_check(player_choice = self.User.choice)
                 else:
                     self.Computer.choice_input_and_check()
-                print(f'\n\rComputer choice: {self.OPTIONS[self.Computer.choice]}\n')
+                self.show_computer_choice()
                 self.timestamp_computer = (time.time() - self.start_time)
                 break
+
+    def show_computer_choice(self):
+        print(f'\n\rComputer choice: {self.OPTIONS[self.Computer.choice]}\n')
+
 
     def round_time(self):
         while True:
