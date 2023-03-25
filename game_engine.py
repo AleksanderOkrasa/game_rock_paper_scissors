@@ -122,7 +122,7 @@ class GameEngine():
 
 if __name__ == '__main__':
     game = GameEngine(10, 2)
-    game.set_difficulty_level('easy')
+    game.set_difficulty_level()
     game.play()
 
 
