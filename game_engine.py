@@ -33,7 +33,10 @@ class GameEngine():
             elif self.computer_points == self.POINTS_TO_WIN:
                 raise YouAreLoser(self.Computer.difficulty_level, self.user_points, self.computer_points)
             self.log.info(f'your points: {self.user_points}, computer points: {self.computer_points}')
+            self.show_points_of_game()
 
+    def show_points_of_game(self):
+        pass
 
     def round(self):
         self.round_handling()
@@ -57,6 +60,7 @@ class GameEngine():
         player_choice.start()
         time.sleep(0.04)
         round_time.start()
+        time.sleep(0.3)
         computer_ai.start()
         wait_for_player_choice.start()
 
@@ -69,9 +73,12 @@ class GameEngine():
             if self.User.choice is not None:
                 if self.User.is_good_choice_input:
                     time_of_player_choice = time.time()
-                    print(f'\n\rYour choice: {self.OPTIONS[self.User.choice]}\n')
+                    self.show_player_choice()
                     break
         self.timestamp_player = (time_of_player_choice - self.start_time)
+
+    def show_player_choice(self):
+        print(f'\n\rYour choice: {self.OPTIONS[self.User.choice]}\n')
 
     def computer_artificial_intelligence(self):
         while True:
@@ -81,23 +88,33 @@ class GameEngine():
                         self.Computer.choice_input_and_check(player_choice = self.User.choice)
                 else:
                     self.Computer.choice_input_and_check()
-                print(f'\n\rComputer choice: {self.OPTIONS[self.Computer.choice]}\n')
+                self.show_computer_choice()
                 self.timestamp_computer = (time.time() - self.start_time)
                 break
+
+    def show_computer_choice(self):
+        print(f'\n\rComputer choice: {self.OPTIONS[self.Computer.choice]}\n')
+
 
     def round_time(self):
         while True:
             current_time = time.time()
             self.elapsed_time = current_time - self.start_time
-            print(f'\relapsed time: {self.elapsed_time}\t\t', end='', flush=True)
+            self.show_elapsed_time()
             if self.elapsed_time >= self.TIME_OF_ROUND:
                 break
 
+    def show_elapsed_time(self):
+        print(f'\relapsed time: {self.elapsed_time}\t\t', end='', flush=True)
+
 
     def pick_a_winner_for_round(self):
+        if self.timestamp_player is None:
+            self.timestamp_player = self.TIME_OF_ROUND + 0.01
         if self.user_choice_was_after_time():
             print('\n')
             self.log.warning(f'you handed over the choice after time ({self.timestamp_player}')
+            self.show_over_time()
             self.winner = 'computer'
         elif self.User.choice == self.Computer.choice:
             self.winner = None
@@ -107,16 +124,20 @@ class GameEngine():
                 self.winner = 'user'
         else:
             self.winner = 'computer'
-        
 
     def user_choice_was_after_time(self):
         return self.timestamp_player > self.TIME_OF_ROUND
+
+    def show_overtime(self):
+        pass
 
     def add_points(self):
         if self.winner == 'user':
             self.user_points += 1
         elif self.winner == 'computer':
             self.computer_points += 1
+
+
 
 if __name__ == '__main__':
     game = GameEngine(10, 2)
